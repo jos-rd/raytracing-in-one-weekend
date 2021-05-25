@@ -1,0 +1,8 @@
+# Images
+images/
+
+# Build directory
+build/
+
+# Qt Creator files
+src/*.user
