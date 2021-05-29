@@ -5,23 +5,32 @@
 #include <iostream>
 #include <fstream>
 
-bool intersect_sphere(const point3& circle_center,
+double intersect_sphere(const point3& circle_center,
                       const double circle_radius,
                       const Ray& r) {
     Vec3 orig_circle_vec = r.origin() - circle_center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0 * dot(r.direction(), orig_circle_vec);
-    auto c = dot(orig_circle_vec, orig_circle_vec) - circle_radius * circle_radius;
-    return (b*b-4*a*c >= 0);
+    auto a = r.direction().length_squared();
+    auto half_b = dot(r.direction(), orig_circle_vec);
+    auto c = orig_circle_vec.length_squared() - circle_radius * circle_radius;
+    auto discriminant = half_b*half_b - a*c;
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        // return smallest real t (closest hitpoint on sphere).
+        return (-half_b - std::sqrt(discriminant)) / a;
+    }
 }
 
 color ray_color(const Ray& r) {
-    // Color the pixels of a sphere centered at (0, 0, -1) red.
-    if (intersect_sphere(point3(0, 0, -1), 0.5, r)) {
-        return color(1, 0, 0);
+    double t = intersect_sphere(point3(0, 0, -1), 0.5, r);
+    if (t > 0.0) {
+        Vec3 normal = unit_vector(r.at(t) - Vec3(0, 0, -1));
+        // x, y, z component in [0, 1].
+        return 0.5*color(normal.x()+1, normal.y()+1, normal.z()+1);
     }
+    // Background gradient coloring
     Vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5*(unit_direction.y() + 1.0);
+    t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
 }
 
