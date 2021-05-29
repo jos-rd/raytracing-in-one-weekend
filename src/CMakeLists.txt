@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
     vec3.h
+    color.h
+    ray.h
 )
 
 set(SOURCES
