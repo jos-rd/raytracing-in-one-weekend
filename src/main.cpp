@@ -24,9 +24,12 @@ double intersect_sphere(const point3& circle_center,
 color ray_color(const Ray& r) {
     double t = intersect_sphere(point3(0, 0, -1), 0.5, r);
     if (t > 0.0) {
+        // Vec3 light_dir(0, 0, 1);
         Vec3 normal = unit_vector(r.at(t) - Vec3(0, 0, -1));
         // x, y, z component in [0, 1].
         return 0.5*color(normal.x()+1, normal.y()+1, normal.z()+1);
+        // auto diffuse_intensity = dot(light_dir, normal);
+        // return color(1, 0, 0) * diffuse_intensity;
     }
     // Background gradient coloring
     Vec3 unit_direction = unit_vector(r.direction());

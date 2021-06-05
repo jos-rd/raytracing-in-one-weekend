@@ -9,6 +9,8 @@ set(HEADERS
     vec3.h
     color.h
     ray.h
+    traceable.h
+    sphere.h
 )
 
 set(SOURCES
